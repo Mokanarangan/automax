@@ -1,11 +1,12 @@
 var co = require("co");
 
-const automax = require('./src/index.js');
+const automax = require('./lib/index.js');
 
 const getState = (path) => automax.exec(`cinco getState ${path}`);
 const getActions = () => automax.exec('cinco actions');
 
 co(function*(){
+
   yield automax.exec('cinco start');
   yield automax.exec("cinco tap 'Mohan R.'");
   yield automax.exec("cinco put  'Enter Password' 1111");

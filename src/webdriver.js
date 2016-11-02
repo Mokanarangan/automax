@@ -14,27 +14,12 @@ var defaultOptions = {
   // port: '4444'
 };
 
-export default function (options){
+export default function(options){
   const opts = Object.assign({}, defaultOptions, options)
   var browser = require('webdriverio')
-    .remote(opts)
+    .remote(opts);
   
   
-  browser
-    .sessions()
-    .then(({value:sessions}) => {
-      console.log('Avalialble sessions: ');
-      sessions.map(s => console.log(s.id));
-      if (_.isEmpty(sessions)) {
-        console.log('Initializing new session');
-        browser.init();
-      } else {
-        const currentSession = _.last(sessions).id;
-        console.log(`Connecting to ${currentSession}`)
-        browser.sessionID(currentSession);
-      }
-    });
-
   browser
     .addCommand('selector', selector(browser));
   browser
@@ -45,7 +30,7 @@ export default function (options){
     .addCommand('put', put(browser));
   browser
     .addCommand('highlight', highlight(browser));
-  
+
   return {
     current: browser,
     switchTo: (tabIndex) => browser.getTabIds().then((tabIds) => browser.switchTab(tabIds[tabIndex])),

@@ -3,6 +3,27 @@ module.exports = function({ vorpal, driver: { current, state }}){
   vorpal
     .command('start', 'Check for state')
     .action(() => current
+      .sessions()
+      .then(({value:sessions}) => {
+        console.log('Avalialble sessions: ');
+        sessions.map(s => console.log(s.id));
+        if (_.isEmpty(sessions)) {
+          console.log('Initializing new session');
+          return current.init();
+        } else {
+          const currentSession = _.last(sessions).id;
+          console.log(`Connecting to ${currentSession}`)
+          return current.sessionID(currentSession);
+        }
+      })
+      .windowHandles()
+      .catch(() => {
+          console.log('No windows open.');
+          console.log('Creating new Session');
+          return current
+            .session('delete')
+            .init();
+      })
       .url('http://localhost:8888'));
       // .url('http://localhost:8080/pos?index.html?mid=c0020-10497318&env=tst6&deviceId=5'));
 

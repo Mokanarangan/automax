@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "start": "./node_modules/.bin/babel-node src/index.js ",
+    "start": "./node_modules/.bin/babel-node src/run.js ",
     "test:noop": "echo 'test ignored'",
     "test": "cross-env BABEL_ENV=test mocha --timeout 1.8e+6 --require co-mocha --require babel-polyfill --compilers js:babel-core/register --recursive",
     "test:with-coverage": "npm run clean:coverage && cross-env BABEL_ENV=test nyc --reporter=lcov mocha --compilers js:babel-core/register --recursive",

@@ -1,12 +1,10 @@
 var _ = require('lodash');
 module.exports = function({ vorpal, driver: { current, state }}){
   vorpal
-    .command('start <mid> <env> <deviceId> [dev]', 'Check for state')
-    .action(({ mid , env, deviceId, dev = false }) => current
+    .command('start', 'Check for state')
+    .action(() => current
       // .url('http://localhost:8888'));
-      .url(
-      dev ? `http://localhost:8888?mid=${mid}&env=${env}&deviceId=${deviceId}` :
-      `http://localhost:8080/pos?index.html?mid=${mid}&env=${env}&deviceId=${deviceId}`)
+      .url('http://localhost:8080/pos?index.html?mid=c0020-10497318&env=tst6&deviceId=5')
       .waitForExist('#ctaf_home_user_list',100000)
       );
 
@@ -85,7 +83,7 @@ module.exports = function({ vorpal, driver: { current, state }}){
   vorpal
     .command('changePOS <host> [port]', 'switch between POS')
     .action(({ host, port }) => current
-    .changePOS(host,port));
+    .changePOS(host,port))
 
 
 }

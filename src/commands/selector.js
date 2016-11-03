@@ -1,6 +1,6 @@
 const Promise = require('bluebird');
 
-const htmlElms = ['span', 'div', 'input'];
+const htmlElms = ['span', 'div', 'input', 'li'];
 const selectors = (text) => [
   `#${text}`,
   `*[value="${text}"]`,

@@ -5,20 +5,19 @@ import put from './commands/put';
 import highlight from './commands/highlight';
 import sessionID from './commands/sessionID';
 import selector from './commands/selector';
+import initialize from './commands/initialize';
+import changePOS from './commands/changePOS';
 
 var defaultOptions = {
   desiredCapabilities: {
     browserName: 'chrome',
   },
-  // host: '10.10.10.107',
-  // port: '4444'
 };
 
 export default function(options){
   const opts = Object.assign({}, defaultOptions, options)
   var browser = require('webdriverio')
     .remote(opts);
-  
   
   browser
     .addCommand('selector', selector(browser));
@@ -30,6 +29,10 @@ export default function(options){
     .addCommand('put', put(browser));
   browser
     .addCommand('highlight', highlight(browser));
+  browser
+    .addCommand('initialize', initialize(browser));
+  browser
+    .addCommand('changePOS', changePOS(browser));
 
   return {
     current: browser,

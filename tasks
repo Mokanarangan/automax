@@ -1,6 +1,4 @@
 start
-tap 'Mohan R.'
+tap 'Owner'
 put  'Enter' 1111
 tap 'Sign In'
-tap 'Order Queue'
-tap 91

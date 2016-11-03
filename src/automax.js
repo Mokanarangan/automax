@@ -5,7 +5,7 @@ import webdriver from './webdriver';
 
 class Automax{
 
-  constructor({seleniumOptions, name = 'automax'}){
+  constructor(seleniumOptions, name = 'automax'){
     this.driver = webdriver(seleniumOptions);
     this.namespaces = [];
     this.vorpal = vorpal;
@@ -31,36 +31,26 @@ You can automate all your browser related tasks with automax. To start with run 
     `;
     var vorpal = this.vorpal;
     vorpal.log(banner);
-    this.driver.current
-      .then((browser) => {
-        this.initialize();
-        return browser;
-      })
+    return this.driver.current
+      .then((browser) => this.initialize())
+      .then(() => vorpal)
       .catch(e => {
         vorpal.log('Could not start Automax as it can not connected to Selenium server. Server Resposne ', e);
       });
-    return vorpal;
   }
 
   initialize(){
     this.vorpal
-      .delimiter('>>')
+      .delimiter(`${this.name}>>`)
       .show();
 
     //Exit Selenium session once over
     var window = this.driver.current;
-    const exit = vorpal.find('exit');
-    if (exit) {
-        exit.remove();
-    }
-    vorpal
-      .command('exit', 'Quit automax')
-      .alias('quit')
-      .action(function* (){
-        window.end().then(()=>{
-          process.exit(0);
-        })
-      });
+    process.on('beforeExit', function () {
+      window.end();
+    });
+    const browser = this.driver.current;
+    return browser.initialize();
   }
 
   /**

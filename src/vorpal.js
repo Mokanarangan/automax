@@ -1,6 +1,8 @@
 const fs = require('fs');
 var vorpal = require('vorpal')();
 var coVorpal = require('co-vorpal')
+var _ = require('lodash');
+var Promise = require('bluebird');
 
 coVorpal(vorpal);
 
@@ -11,6 +13,7 @@ vorpal
     for(let i = 0; i < commands.length; i++){
       console.log(commands[i]);
       yield vorpal.execSync(`${namespace} ${commands[i]}`);
+			yield Promise.delay(500);
     }});
 
 vorpal

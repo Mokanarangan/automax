@@ -1,0 +1,7 @@
+clickXpath "//*[@id='ctaf_home_user_list']/li[2]/a/span[2]"
+setXpath "//*[@id='ctaf_login_password']" 49
+setXpath "//*[@id='ctaf_login_password']" 49
+setXpath "//*[@id='ctaf_login_password']" 49
+setXpath "//*[@id='ctaf_login_password']" 49
+clickXpath "//*[@id='ctaf_login_submit']"
+clickXpath "//*[@id='table_view_go_order_queue']"

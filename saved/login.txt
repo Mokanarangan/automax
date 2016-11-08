@@ -1,0 +1,15 @@
+clickXpath "//*[@id='ctaf_home_user_list']/li[2]/a"
+setXpath "//*[@id='ctaf_login_password']" 81
+setXpath "//*[@id='ctaf_login_password']" 81
+setXpath "//*[@id='ctaf_login_password']" 81
+setXpath "//*[@id='ctaf_login_password']" 81
+clickXpath "//*[@id='ctaf_login_submit']"
+clickXpath "//*[@id='ctaf_login_password']"
+setXpath "//*[@id='ctaf_login_password']" 49
+setXpath "//*[@id='ctaf_login_password']" 49
+setXpath "//*[@id='ctaf_login_password']" 49
+setXpath "//*[@id='ctaf_login_password']" 49
+clickXpath "//*[@id='ctaf_login_submit']"
+clickXpath "//*[@id='table_view_go_order_queue']"
+clickXpath "//*[@id='order_queue_navigate_to_table_view']"
+clickXpath "//*[@id='ctaf_main_header_login_user_name']/a"

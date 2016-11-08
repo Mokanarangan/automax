@@ -5,7 +5,7 @@ import webdriver from './webdriver';
 
 class Automax{
 
-  constructor(seleniumOptions, name = 'automax'){
+  constructor({ seleniumOptions, name = 'automax' }){
     this.driver = webdriver(seleniumOptions);
     this.namespaces = [];
     this.vorpal = vorpal;
@@ -94,8 +94,13 @@ You can automate all your browser related tasks with automax. To start with run 
   }
 }
 
-
 //Singleton instance of Automax
+var instance;
 module.exports = function(options){
-  return new Automax(options);
+  if (!instance){
+    instance = new Automax(options);
+  }else {
+    instance.vorpal.log('Warning!: Automax is already running. Reusing existing automax session');
+  }
+  return instance;
 };

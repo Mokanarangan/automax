@@ -1,4 +1,5 @@
 const Promise = require('bluebird');
+import _ from 'lodash';
 
 export default function(browser){
  return function async(params) {
@@ -15,12 +16,15 @@ export default function(browser){
         .waitForExist(selector,1000)
         .elements(selector)
         .then(res => {
+					console.log(res.value);
+					const min = _.sortBy(res.value, arg => parseInt(arg.ELEMENT))[0].ELEMENT;
+					console.log(min);
           return Promise.all(
               res.value.map(arg => browser
                 .elementIdLocation(arg.ELEMENT)
                 .then(loc => {
                   return browser.execute(`var label = document.createElement("label");
-                    label.innerText = "${arg.ELEMENT}";
+                    label.innerText = "${arg.ELEMENT - min}";
                     var main = document.getElementById("app");
                     label.style.position="absolute";
                     label.style.top="${loc.value.y}px";
@@ -34,7 +38,8 @@ export default function(browser){
                     main.appendChild(label);
                   `)
                 }))
-          )
+          ).then(() => browser.setCookie({ name: 'highlightCount', value: `${min}` }));
+
         })
       ));
     }

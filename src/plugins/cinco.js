@@ -1,11 +1,13 @@
 var _ = require('lodash');
+var fs = require('fs');
+
 module.exports = function({ vorpal, driver: { current, state }}){
   vorpal
     .command('start <mid> <env> <deviceId> [dev]', 'Check for state')
-    .action(({ mid , env, deviceId, dev = false }) => current
+    .action(({ mid , env, deviceId, dev = 'true' }) => current
       // .url('http://localhost:8888'));
       .url(
-      dev ? `http://localhost:8888?mid=${mid}&env=${env}&deviceId=${deviceId}` :
+      dev === 'true' ? `http://localhost:8888?mid=${mid}&env=${env}&deviceId=${deviceId}` :
       `http://localhost:8080/pos?index.html?mid=${mid}&env=${env}&deviceId=${deviceId}`)
       .waitForExist('#ctaf_home_user_list',100000)
       );
@@ -28,9 +30,9 @@ module.exports = function({ vorpal, driver: { current, state }}){
 
   
   vorpal
-    .command('getState <state>', 'get state value')
-    .action(({ state }) => current
-    .execute(`return store(['${state}'])`)
+    .command('getState [params...]', 'get state value')
+    .action(({ params }) => current
+    .execute(`return store([${_.reduce(params, (command, val) => `${command}'${val}',`,'')}])`)
     .then(({ value }) => value));
 
 
@@ -77,8 +79,8 @@ module.exports = function({ vorpal, driver: { current, state }}){
       var element = main.childNodes[1];
       element.parentNode.removeChild(element);
       })`)
-    .elementIdClick(param)
-          .catch(()=>true)
+		.getCookie('highlightCount')
+		.then(res => current.elementIdClick(`${parseInt(param)+parseInt(res.value)}`))
 
       );
 
@@ -87,5 +89,83 @@ module.exports = function({ vorpal, driver: { current, state }}){
     .action(({ host, port }) => current
     .changePOS(host,port));
 
+  vorpal
+    .command('initEventListener')
+    .action(() => current
+    .execute(`
+      window.eventList = [];
+      window.eventCount = 0;
+      document.removeEventListener('click', window.clickEventListener);
+      document.removeEventListener('keydown', window.keyEventListener);
+      window.xpath = function xpath(el) {
+        if (typeof el == "string") return document.evaluate(el, document, null, 0, null)
+        if (!el || el.nodeType != 1) return ''
+        if (el.id) return "//*[@id='" + el.id + "']"
+        var sames = [].filter.call(el.parentNode.children, function (x) { return x.tagName == el.tagName })
+        return xpath(el.parentNode) + '/' + el.tagName.toLowerCase() + (sames.length > 1 ? '['+([].indexOf.call(sames, el)+1)+']' : '')
+      }
+      window.keyEventListener = function(event){
+        window.eventList.push({id:window.eventCount, type:'key', key:event.keyCode, element:window.xpath(event.target) })
+        window.eventCount = window.eventCount+1;
+      }
+      window.clickEventListener = function(event){
+        window.eventList.push({id:window.eventCount, type:'click', element:window.xpath(event.target) })
+        window.eventCount = window.eventCount+1;
+      };
+
+      document.addEventListener("click", window.clickEventListener)
+      document.addEventListener("keydown", window.keyEventListener)
+      `));
+
+  vorpal
+    .command('saveEvents <name>')
+    .action(({name}) => current
+      .execute(`return window.eventList`)
+      .then(res => { 
+        const commands = _(res.value)
+          .sortBy(['eventCount'])
+          .map(event => event.type === 'click' ? `clickXpath "${event.element}"`
+            : `setXpath "${event.element}" ${event.key}`)
+          .value();
+        console.log(commands); 
+        return fs.writeFile(`./saved/${name}.txt`, commands.join('\n'));
+      })
+    )
+  vorpal
+    .command('clickXpath [params...]')
+    .action(({params}) => {
+			let xPath = params.join('');
+			return current
+      .waitForExist(xPath,10000)
+			.scroll(xPath)
+      .click(xPath)
+			.catch(e =>{
+          xPath = xPath.replace( /\*\[([^\]])*\]\//, '' );
+					return current.waitForExist(xPath,10000)
+						.click(xPath);
+			})
+			.catch((e) => {
+				if(e.message !== 'element not visible'){
+					throw e;
+				}
+			})
+		})
+			
+   
+   vorpal
+    .command('setXpath [params...]')
+    .action(({params}) =>{
+			const val = String.fromCharCode(params[params.length-1]);
+			params.splice(-1,1);
+			let xPath = params.join('');
+			 return current
+      	.waitForExist(xPath,100000)
+      	.addValue(xPath, val)
+				.catch(e =>{
+							xPath = xPath.replace( /\*\[([^\]])*\]\//, '' );
+												return current.waitForExist(xPath,10000)
+																		.click(xPath);
+				})
+		});
 
 }

@@ -1,6 +1,6 @@
 # automax
 
-Make your mandane browser task automated and run them while you are browsing.
+Make your mundane browser task automated and run them while you are browsing.
 
 [![Travis](https://img.shields.io/travis/udnisap/automax.svg)](https://travis-ci.org/udnisap/automax)
 [![Codecov](https://img.shields.io/codecov/c/github/udnisap/automax.svg)](https://codecov.io/gh/udnisap/automax)
@@ -10,7 +10,7 @@ Make your mandane browser task automated and run them while you are browsing.
 ## Install
 Do you have selenium installed? if not 
 ```sh
-$ npm install --global selenium-standalon 
+$ npm install --global selenium-standalone 
 $ selenium-standalone install
 $ selenium-standalone start
 ```

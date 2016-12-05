@@ -1,0 +1,4 @@
+start
+tap 'Owner'
+put  'Enter' 1111
+tap 'Sign In'

@@ -5,7 +5,7 @@ import webdriver from './webdriver';
 
 class Automax{
 
-  constructor({seleniumOptions, name = 'automax'}){
+  constructor({ seleniumOptions, name = 'automax' }){
     this.driver = webdriver(seleniumOptions);
     this.namespaces = [];
     this.vorpal = vorpal;
@@ -17,7 +17,7 @@ class Automax{
    */
   start(){
     var banner = `
-                               __
+                            __
     (\\   /)  _____   __ ___/  |_  ____   _____ _____  ___  ___
     .\\\\_//. \\__  \\ |  |  \\   __\\/  _ \\ /     \\\\__  \\ \\  \\/  /
      )0 0(   / __ \\|  |  /|  | (  <_> )  Y Y  \\/ __ \\_>    <
@@ -26,25 +26,22 @@ class Automax{
 
 
 Welcome to ${this.name}!
-You can automate all your browser related tasks with automax. To starts with run help
+You can automate all your browser related tasks with automax. To start with run help
 
     `;
     var vorpal = this.vorpal;
     vorpal.log(banner);
-    this.driver.current
-      .then((browser) => {
-        this.initialize();
-        return browser;
-      })
+    return this.driver.current
+      .then((browser) => this.initialize())
+      .then(() => vorpal)
       .catch(e => {
         vorpal.log('Could not start Automax as it can not connected to Selenium server. Server Resposne ', e);
       });
-    return vorpal;
   }
 
   initialize(){
     this.vorpal
-      .delimiter('>>')
+      .delimiter(`${this.name}>>`)
       .show();
 
     //Exit Selenium session once over
@@ -52,6 +49,8 @@ You can automate all your browser related tasks with automax. To starts with run
     process.on('beforeExit', function () {
       window.end();
     });
+    const browser = this.driver.current;
+    return browser.initialize();
   }
 
   /**
@@ -90,11 +89,10 @@ You can automate all your browser related tasks with automax. To starts with run
   unMockVorpal() {
     if (_.isFunction(this.vopalCommand)){
       this.vorpal.command = this.vopalCommand;
-      delete this.vorpal.namespaces;
+      delete this.vorpal.namespace;
     }
   }
 }
-
 
 //Singleton instance of Automax
 var instance;

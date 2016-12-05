@@ -19,7 +19,7 @@ module.exports = function(options = {}){
     .value();
     instance =  automax;
   }
-
+  console.log(instance) ;
   return instance;
 }
 

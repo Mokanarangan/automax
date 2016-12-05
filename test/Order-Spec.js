@@ -21,18 +21,18 @@ const pos2 = new POS({
 
 before('starup the POS', function *(){
     yield pos1.start();
-    yield pos2.start();
+    // yield pos2.start();
 });
 
 describe('Order Detail', () => {
   it('should run the test', function * () {
-    // yield pos1.tap('Mohan R.');
+    yield pos1.tap('Mohan R.');
 		// yield pos1.exec('pay');
-		yield pos2.exec('pos3');
+		// yield pos2.exec('pos3');
     // yield pos2.tap('Owner');
-    // yield pos1.put('Enter', '1111');
+    yield pos1.put('Enter', '1111');
     // yield pos2.put('Enter', '1111');
-    const currentOrder = yield pos2.getState('order', 'currentOrder');
+    const currentOrder = yield pos1.getState('order', 'currentOrder');
     console.log(currentOrder);
     expect(true).to.be.equal(true);
   });

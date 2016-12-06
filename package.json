@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "./node_modules/.bin/babel-node src/run.js ",
-    "coverage": "istanbul cover _mocha -- -R spec --timeout 1.8e+6 --require co-mocha --require babel-polyfill --compilers js:babel-core/register --recursive",
+    "coverage": "npm run test && ./node_modules/.bin/istanbul report --include=coverage.json html",
     "test:noop": "echo 'test ignored'",
     "test": "cross-env BABEL_ENV=test mocha --timeout 1.8e+6 --require co-mocha --require babel-polyfill --compilers js:babel-core/register --recursive",
     "test:with-coverage": "npm run clean:coverage && cross-env BABEL_ENV=test nyc --reporter=lcov mocha --compilers js:babel-core/register --recursive",
@@ -59,7 +59,7 @@
     "eslint-plugin-jsx-a11y": "^1.2.2",
     "eslint-plugin-react": "^5.1.1",
     "ghooks": "^1.2.4",
-    "istanbul": "^0.4.5",
+    "istanbul": "1.0.0-alpha.1",
     "mocha": "^2.5.3",
     "npm-run-all": "^2.1.2",
     "nyc": "^6.4.4",

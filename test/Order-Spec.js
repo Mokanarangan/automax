@@ -32,8 +32,9 @@ describe('Order Detail', () => {
     // yield pos2.tap('Owner');
     yield pos1.put('Enter', '1111');
     // yield pos2.put('Enter', '1111');
-    const currentOrder = yield pos1.getState('order', 'currentOrder');
-    console.log(currentOrder);
+    // const currentOrder = yield pos1.getState('order', 'currentOrder');
+    yield pos1.coverage();
+    // console.log(currentOrder);
     expect(true).to.be.equal(true);
   });
 });

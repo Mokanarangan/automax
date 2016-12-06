@@ -37,6 +37,15 @@ module.exports = function({ vorpal, driver: { current, state }}){
 
 
   vorpal
+    .command('coverage', 'get state value')
+    .action(() => current
+    .execute('return window.__coverage__')
+    .then(({ value }) => {
+      return fs.writeFile('coverage.json', JSON.stringify(value));
+
+    }));
+
+  vorpal
     .command('tap <value> [id]', 'click on element based on text')
     .action(({ value, id = 0 }) => current
     .tap(value, id)
